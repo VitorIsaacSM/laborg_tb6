@@ -73,38 +73,6 @@ begin
         
 end regn;
 
-
-
---++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- register 8 bits TP6
---++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-library IEEE;
-use IEEE.std_logic_1164.all;
-
-entity reg_oito_bit is
-           generic( INIT_VALUE : STD_LOGIC_VECTOR(7 downto 0) := (others=>'0') );
-           port(  ck, rst, ce : in std_logic;
-                   D : in  STD_LOGIC_VECTOR (7 downto 0);
-                   Q : out STD_LOGIC_VECTOR (7 downto 0)
-               );
-end reg_oito_bit;
-
-architecture regn of reg_oito_bit is 
-begin
-
-  process(ck, rst)
-  begin
-       if rst = '1' then
-              Q <= INIT_VALUE(31 downto 0);
-       elsif ck'event and ck = '0' then
-           if ce = '1' then
-              Q <= D; 
-           end if;
-       end if;
-  end process;
-        
-end regn;
-
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- Register Bank (R0..R31) - 31 GENERAL PURPOSE 16-bit REGISTERS
 --++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -157,7 +125,7 @@ begin
     l1: for i in 0 to 31 generate   
         wen(i) <= '1' when i/=0 and adRD=i and wreg='1' else '0';
         rx: entity work.regnbit port map(ck => ck, rst => rst, ce => wen(i), D => RD, Q => reg(i));                    
-    end generate l1;
+    end generate l1;   
         
     R1 <= reg(CONV_INTEGER(AdRs));    -- source1 selection 
 
